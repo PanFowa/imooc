@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<style>
+			body,div,span {margin:0;padding:0;}
+			#div1 {width:200px;height:200px;background:red;position:relative;left:-200px;top:0;}
+			#div1 span {width:20px;height:50px;background:blue;position:absolute;left:200px;top:75px;}
+		</style>
+		<script>
+			window.onload = function (){
+				var oDiv = document.getElementById("div1");
+				oDiv.onmouseover = function (){
+					//步长10,目标为0(即从当前的-200px要变为0px,这个过程中每次都以10px为步长递增，直到div的left值为0px)
+					startMove(0);
+				}
+				
+				oDiv.onmouseout = function (){
+					//步长-10,目标为-200px(即从当前的0px要变为-200px,这个过程中每次都以-10px为步长递增，直到div的left值为-200px)
+					startMove(-200);
+				}
+			}
+			
+			//声明变量timer,用以下文持有定时器对象
+			var timer = null;
+			//步长在程序中固定为10
+			//向左还是向右移动则由div的当前left值和目标值来决定
+			function startMove(iTarget){
+				//一开始就清除一下定时器，解决每次鼠标移入时都重新开启一个定时器而导致left忽然变大的问题()
+					clearInterval(timer);
+				/*开启定时器，并将定时器对象赋给timer变量持有(持有定时器是为了方便对定时器进行操作)。
+				该定时器每隔30毫秒执行一次函数。
+				*/
+				timer = setInterval(function(){
+					var oDiv = document.getElementById("div1");
+					//持有div当前的left值
+					var offsetLeftOfODiv = oDiv.offsetLeft;
+					//offset定义为缓冲系数。值越大，缓冲效果越明显；值越小，效果越不明显。
+					var offset = 10 ;
+					//步长由目标值和当前值进行计算。当前值与目标之差越大，step就越大；差越小则step越小。那么再除以一个系数。缓冲效果就更明显了。
+					//向左还是向右移动由step计算得到的值来决定
+					var step = (iTarget - offsetLeftOfODiv) / offset;
+					
+					//使用math取整函数对step值为小数导致left值总是大于-200px(如-190.5px)或者小于(如-9.1px)0的情况进行处理
+					//Math.ceil 向上取整，如 3.4 取为4
+					//Math.floor 向下取整，如3.98 取为3
+					step = step > 0 ? Math.ceil(step) : Math.floor(step);
+					//如果div当前的left值已经变为0，则清除定时器
+					if (offsetLeftOfODiv == iTarget) {
+						clearInterval(timer);
+					}else{ //div当前的left值(div的初始值为-200px,在样式里定义的)不达到0则继续每次加10px
+						oDiv.style.left = offsetLeftOfODiv + step +"px";
+					}
+					
+					 
+				},30);
+			}
+		</script>
+	</head>
+	<body>
+		<div id="div1"><span id="share">分享</span></div>
+	</body>
+</html>

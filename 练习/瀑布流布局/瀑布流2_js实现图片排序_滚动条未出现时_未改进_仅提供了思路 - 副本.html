@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		html {
+			/*强制显示ie的垂直滚动条*/
+			overflow-y:scroll;
+			/*强制显示Mozilla的垂直滚动条*/
+			overflow:-moz-scrollbars-vertical;
+			
+		}
+		*{margin:0;padding:0;}
+		/*瀑布流的原理:box相对main进行绝对定位来调整各个box相对main的位置。main的宽度在js中进行计算和赋值*/
+		#main {position:relative;}
+		.box {padding:15px 0 0 15px;float:left;}
+		.pic {padding:10px;border:1px solid #ccc;border-radius:5px;box-shadow:0 0 5px #ccc;}
+		.pic img {width:165px;height:auto;}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/0.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/1.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/2.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/3.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/4.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/5.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/6.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/7.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/8.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/9.jpg" />
+			</div>
+		</div>
+		<div class ="box">
+			<div class ="pic">
+				<img src="images/10.jpg" />
+			</div>
+		</div>
+		
+		
+	</div>
+</body>
+</html>
+<script>
+	
+	window.onload = function(){
+		/*原理:计算出第一列box的高度，并根据其中高度最小的box，将第二列及之后的box定位在每列高度最小的后面,并将该元素的高度加在
+		最小高度上。
+		*/
+		waterfall("main","box");
+		
+		//模拟数据
+		var dataInt = {"data" : [{"src" : "0.jpg"},{"src" : "1.jpg"},{"src" : "2.jpg"},{"src" : "3.jpg"},{"src" : "4.jpg"},{"src" : "5.jpg"},{"src" : "6.jpg"},]};
+		//页面滚动时触发onscroll事件。
+		window.onscroll = function (){
+			if(checkScrollSlide()){ //满足加载条件则开始加载
+				var oParentElement = document.getElementById("main");
+				//将数据渲染到当前页面的尾部。尾部是哪，怎么加？
+				for(var i =0 ;i<dataInt.data.length;i++){
+					//创建div，并设置其class为box,然后将其添加到其父元素上
+					var oBox = document.createElement("div");
+					oBox.className = "box";
+					//将box添加到main里
+					oParentElement.appendChild(oBox);
+					
+					//创建div，并设置其class为pic,然后将其添加到其父元素上
+					var oPic = document.createElement("div");
+					oPic.className = "pic";
+					
+					//将oPic添加到oBox里
+					oBox.appendChild(oPic);
+					
+					//创建img，并设置其src属性的值,然后将其添加到其父元素上
+					var oImg = document.createElement("img");
+					oImg.src = "images/" + dataInt.data[i].src;
+					
+					//将oImg添加到oPic里
+					oPic.appendChild(oImg);
+					
+					
+				}
+				
+				//上面添加完了新的元素，下面还得为它们添加排序操作。
+				waterfall("main","box");
+			}
+		}
+		
+		/*
+			测试 ： 当滚动条没有出现时无法触发滚动事件，该怎么办
+		*/
+		
+		var oParentElement = document.getElementById("main");
+		var boxs = getObjByClass(oParentElement,"box");//获取oParentElement下所有class为box的div元素
+		var lastBox = boxs[boxs.length-1];//获取当前页面中最后一个class为box的div元素
+		//获取最后一个元素距整个页面顶部的距离
+		var topOfLastBox = lastBox.offsetTop;
+		//获取最后一个元素的内容高度
+		var height = lastBox.offsetHeight;
+		console.log("onload:topOfLastBox="+topOfLastBox+";height="+height);
+	};
+	
+	function waterfall(parentId,clsName){
+		var oParent = document.getElementById(parentId);
+		var boxs = getObjByClass(oParent,clsName);//获取父元素main下所有class为box的元素
+		
+		//计算整个页面显示的列数(页面宽/单个box的宽)。瀑布流的特点:每个box的宽相同，高度不同
+		var pageWidth = document.documentElement.clientWidth;
+		var boxWidth = boxs[0].offsetWidth;
+		var cols = Math.floor(pageWidth / boxWidth); //相除操作并不一定保证就是整数，所以使用Math.floor向下取整保证取到的都是整数
+		
+		//设置main的宽度。不设置，那么页面的列数将随页面的宽度调整而动态的调整(不会出现水平滚动条)
+		oParent.style.cssText = "width:"+ cols*boxWidth +"px;margin:0 auto;"; //使用margin:0 auto 让oParent元素内的内容水平居中
+		
+		/*上面已经将要操作的元素取到，下面来对第二列及其后面的元素进行排序
+			1.第二列的第一张图片要紧跟在第一列中高度最小元素的后面。此时就开始用到main元素的position:relative及要定位元素
+			的position:absolute。使用Position对元素定位，需要指定top和left，那么这两个值怎么来计算呢
+		*/
+		//存放每一列元素的高度的数组
+		var heightArr = [];
+		
+		for (var i = 0; i<boxs.length;i++){
+			var boxElement = boxs[i];
+			if(i < cols){ //取第一列里所有元素的高度
+				heightArr.push(boxElement.offsetHeight);
+			}else{ //对第二列及其之后的元素 根据前一列的元素位置 来定位
+				//计算数组中最小值。
+				var minHeight = Math.min.apply(null,heightArr);//因为Math.min函数的参数不是数组，所以得使用apply
+				//获取当前高度最小值元素所处的列下标
+				var index = getIndexInArray(heightArr,minHeight);
+				
+				//将当前元素定位在前一列元素中高度最小元素的下面
+				boxElement.style.position = "absolute"; //对当前元素设置相对父元素进行绝对定位(box的父元素是id为main的div)
+				boxElement.style.left = boxs[index].offsetLeft +"px";
+				boxElement.style.top = minHeight +"px"; //定位使用的top的值为当前列的所有元素当前的最小高度值
+				
+				/*上面 当前元素定位完了，还得把当前元素的高度加到前一列中高度最小列的高度上。
+				否则下次循环得到的最小高度的元素依然是 同一个元素，那么就全都挤到一起去了*/
+				heightArr[index]+= boxElement.offsetHeight;
+			}
+		}
+	}
+	
+	function getObjByClass(parentElement,clsName){
+		//获取指定元素下的所有元素
+		var oElements = parentElement.getElementsByTagName("*");
+		//存放符合条件的所有元素的数组。
+		var arr = [];
+		for(var i =0 ;i<oElements.length;i++){
+			var oElement = oElements[i];
+			//符合class为clsName的元素则添加到数组中
+			if(oElement.className == clsName){
+				arr.push(oElement);
+			}
+		}
+		
+		//上面找出所有符合条件的元素，现在将找到的元素返回。
+		return arr;
+	}
+	
+	//取数组中指定值的下标
+	function getIndexInArray(arr,value){
+		for(var index in arr){
+			if(arr[index] == value){
+				return index;
+			}
+		}
+	}
+	//检测是否具备加载数据块的条件。
+	/*原理:(当前页面中最后一个box距顶部的距离 + 最后一个元素高度的一半) 与 (页面滚动的距离+可视窗口的高度)进行比较 。
+	后者大于前者时 开始加载 新的元素内容*/
+	function checkScrollSlide(){
+		/*
+			计算 当前页面中最后一个box距顶部的距离 + 最后一个元素高度的一半
+		*/
+		//获取最后一个元素，然后就可以得到其距整个页面顶部的距离、其高度
+		var oParentElement = document.getElementById("main");
+		var boxs = getObjByClass(oParentElement,"box");//获取oParentElement下所有class为box的div元素
+		var lastBox = boxs[boxs.length-1];//获取当前页面中最后一个class为box的div元素
+		//获取最后一个元素距整个页面顶部的距离
+		var topOfLastBox = lastBox.offsetTop;
+		//获取最后一个元素的内容高度
+		var height = lastBox.offsetHeight;
+		
+		//上面 获取到了 当前页面中最后一个box距顶部的距离 和 它的高度 。把它们相加就能得到第一个想要的数据
+		var lastBoxDis = topOfLastBox + Math.floor(height/2); //使用Math.floor 向下取整，避免height/2得到小数而异常的情况
+		
+		/*
+			计算 页面滚动的距离+可视窗口的高度
+		*/
+		//获取当前滚动的距离
+		var scrollTop = document.body.scrollTop || document.documentElement.scrollTop ;//浏览器支持 body.scrollTop 时则使用该方式取值；浏览器支持 document.documentElement.scrollTop时则使用该方式取值 
+		//获取可视窗口的高度
+		var clientH = document.body.clientHeight || document.documentElement.clientHeight;
+		
+		/*
+			加载的内容没有滚动条时呢，无法触发滚动事件，怎么办。设置了样式 但没有效果。
+			提示：没有滚动条 是不会触发到 onscroll事件的，所以得到调用这个方法的方法里想办法加载一些内容，使滚动条出现。
+			最简单方法：html或者body的样式里添加min-height:超过浏览器可视高度的值。如min-height:1000px;
+		*/
+		
+		console.log("topOfLastBox="+topOfLastBox+";lastBoxDis="+lastBoxDis+";scrollTop="+scrollTop +";clientH= "+clientH);
+		return  (lastBoxDis < (scrollTop + clientH)||clientH < lastBoxDis) ? true : false;
+	}
+</script>

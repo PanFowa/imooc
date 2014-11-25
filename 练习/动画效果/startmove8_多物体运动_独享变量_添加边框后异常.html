@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<style>
+			body,ul,li {margin:0;padding:0;}
+			ul,li {list-style:none;}
+			/*添加border后使用obj.offsetWidth获取到的值包括border的值*2 导致obj的width不是想要的初始值200px或给定的值*/
+			ul li {width:200px;height:100px;background:yellow;margin-bottom:20px;border:1px solid #000;}
+			
+		</style>
+		<script>
+			window.onload = function (){
+				var aLi = document.getElementsByTagName("li");
+				for (var i=0;i<aLi.length;i++){
+					var oLi = aLi[i];
+					//为每个对象定义一个定时器持有者。以解决共用timer等变量时出现的问题
+					oLi.timer = null;
+					
+					oLi.onmouseover = function (){
+						startMove(this,400);
+					}
+					
+					oLi.onmouseout = function (){
+						startMove(this,200);
+					}
+				}
+			}
+			
+			//定义定时器持有变量
+			//添加border后(样式里)使用obj.offsetWidth获取到的值包括border的值*2 导致obj的width不是想要的初始值200px或给定的值
+			function startMove(obj,iTarget){
+				//清除定时器
+				clearInterval(obj.timer);
+				//定义定时器，并赋给timer
+				obj.timer = setInterval(function(){
+					//持有div当前的width值
+					var offsetWidthOfObj = obj.offsetWidth;
+					//offset定义为缓冲系数。值越大，缓冲效果越明显；值越小，效果越不明显。
+					var offset = 10 ;
+					//步长由目标值和当前值进行计算。当前值与目标之差越大，step就越大；差越小则step越小。那么再除以一个系数。缓冲效果就更明显了。
+					//向左还是向右移动由step计算得到的值来决定
+					var step = (iTarget - offsetWidthOfObj) / offset;
+					
+					//使用math取整函数对step值为小数导致left值总是大于200px(如190.5px)或者小于(如9.1px)0的情况进行处理
+					//Math.ceil 向上取整，如 3.4 取为4
+					//Math.floor 向下取整，如3.98 取为3
+					step = step > 0 ? Math.ceil(step) : Math.floor(step);
+					//如果div当前的width值已经变为400，则清除定时器
+					if (offsetWidthOfObj == iTarget) {
+						clearInterval(timer);
+					}else{ //div当前的widht值(div的初始值为200px,在样式里定义的)不达到0则继续每次加10px
+						obj.style.width = offsetWidthOfObj + step +"px";
+					}
+				},30);
+			}
+			
+			
+			
+		</script>
+	</head>
+	<body>
+		<ul>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</body>
+</html>

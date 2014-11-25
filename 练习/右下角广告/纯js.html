@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>右下角弹窗</title>
+<style>
+* {
+    margin: 0;
+	padding: 0;
+}
+.content {
+	width: 960px;
+	height: 1440px;
+	background: #ccc;
+	color: #000;
+	font-size: 36px;
+	text-align: center;
+	margin: 0 auto;
+	position: relative;
+}
+.tipCon {
+  position : fixed ;	/*利用css的positiont属性定位广告显示的位置*/
+  right : 0 ;
+  bottom : 0 ;
+}
+.clickMe {
+	height: 24px;
+	background: #CCC;
+	line-height: 24px;
+}
+.showPic {
+   display : block;  /* 初始为隐藏，可以改变初始效果*/
+}
+.hide {display : none ;}
+.clickMe {
+	position: relative;
+}
+.clickMe a {
+	background: url(http://img.mukewang.com/542286f8000186a604300150.jpg) no-repeat -399px -19px;
+	width: 16px;
+	height: 16px;
+	display: block;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+.clickMe a:hover {
+	background-position: -343px -19px;
+}
+
+   
+</style>
+<script>
+window.onload = function(){
+	var tipCon = document.getElementById("tipCon");//定义传参控件
+    var clickMe = document.getElementById("clickMe");
+	var showPic = document.getElementById("showPic");
+	var closeBtn = document.getElementById("closeBtn");
+	clickMe.onmouseover = function(){//鼠标移入事件
+		  showPic.className = "showPic";
+		  closeBtn.className = "showPic";
+		}
+        
+	closeBtn.onclick = function(){//鼠标点击事件
+		showPic.className = "hide";
+		  closeBtn.className = "hide";
+	}
+}
+</script>
+</head>
+
+<body>
+<div class="content"><img src="http://img.mukewang.com/537d9b860001795a09601700.jpg" /></div>
+<div class="tipCon" id="tipCon">
+  <div class="clickMe" id="clickMe">猜猜我有啥？<a href="#" id="closeBtn"></a></div>
+  <div class="showPic" id="showPic"><img src="http://img.mukewang.com/537d9ad6000193e904000300.jpg" /></div><!--图片可以自定义-->
+</div>
+</body>
+</html>

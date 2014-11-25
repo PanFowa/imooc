@@ -1,0 +1,256 @@
+<html>
+	<head>
+		<style>
+			body {
+				background:url(images/default_bg_0.jpg) #1c0c0f center 0 repeat fixed;
+				margin:0;
+				padding:0;
+				padding-top:41px;
+			}
+			.top {
+				position:fixed;top:0;
+				width:100%;height:41px;
+				background:#001e38;
+				z-index:99;
+				box-shadow: 0 1px 0 rgba(9,9,9,0.2);
+			}
+			.header{
+				width:960px;height:200px;
+				margin:0 auto;
+				background:rgba(255,255,255,0.2);
+			}
+			.container{
+				width:960px;
+				margin:0 auto;
+				position:relative;
+			}
+			.scrubber{
+				width:47px;
+				min-height:200px;
+				position:absolute;
+				top:29px;
+				left:0;
+				z-index:99;
+				
+			}
+			.scrubber a {
+				display:block;
+				height:26px;
+				line-height:26px;font-size:12px;
+				border-right-color:rgba(200,200,200,0.5);
+				padding-right:5px;
+				color:#a5a5a5;text-decoration:none;
+				text-shadow:0 1px 1px rgba(0,0,0,0.3);
+				text-align:right;
+				
+			}
+			.scrubber a:hover,
+			.scrubber a.current{
+				border-right-color:#7ebad0;
+				color:#7ebad0;
+				font-weight:bold;
+			}
+			.scrubber a:hover {text-decoration:underline;}
+			.scrubber a.current:hover {text-decoration:none;}
+			
+			.content{
+				min-height:1000px;
+				background:url(images/) repeat-y 121px 0;
+				padding-top:50px;
+				padding-left:160px;
+				position:relative;
+			}
+			
+			.content-year,.content-month {
+					height:30px;
+					line-height:30px;
+					color:#a5a5a5;
+					text-shadow:0 1px 1px rgba(0,0,0,0.3);
+					font-weight:bold;
+					font-size:14px;
+					position:relative;
+					left:-90px;
+					clear:both;
+				}
+				.content-item {
+					width:370px;
+					min-height:300px;
+					background:#fff;
+					border-radius:4px;
+					margin:20px 30px 0 0;
+					position:relative;
+					color:#888;
+					
+				}
+					.content-item-icon-arrow {
+						position:absolute;
+						left:-10px;
+						top:20px;
+						height:0;
+						border-color:transparent #fff transparent transparent;
+						border-width:10px 10px 10px 0;
+						border-style:dashed solid dashed dashed;
+					}
+					.content-item-icon-dot {
+						width:11px;
+						height:11px;
+						border-radius:11px;
+						background:#fff;
+						position:absolute;
+						left:-43px;
+						top:25px;
+					}
+					
+					.content-item-icon-dot-child {
+						width:7px;
+						height:7px;
+						border-radius:7px;
+						background:#d3eae9;
+						position:absolute;
+						left:2px;
+						top:2px;
+					}
+					.content-item-head {
+						padding:15px;
+						padding-bottom:0;
+					}
+					.content-item-head-title {
+						height:46px;
+						line-height:46px;
+						font-size:28px;
+						padding:0 0 10px 56px;
+						position:relative;
+					}
+					.content-item-head-title-lunar {
+						position:absolute;
+						left:0;
+						top:0;
+						width:46px;
+						height:46px;
+						line-height:23px;
+						background:#b3dae9;
+						border-radius:8px;
+						overflow:hidden;
+						color:#fff;
+						font-size:27px;
+					}
+					.content-item-head-title-intro{
+						font-size:14px;
+						line-height:22px;
+						padding:0 15px;
+						margin-bottom:10px;
+					}
+					.content-item-media {
+						height:277px;
+						overflow:hidden;
+						padding-bottom:10px;
+					}
+					.content-item-footer {
+						padding:10px 15px;
+						margin:0 15px;
+						border-top:1px solid #d6d6d6;
+						font-size:12px;
+						color:#b2b2b2;
+						line-height:20px;
+					}
+					.content-item-footer-info {
+						padding-top:5px;
+					}
+					
+					.content-item-footer-info a{
+						color:#b2b2b2;
+						text-decoration:none;
+						padding-right:10px;
+						display:inline-block;
+						height:20px;
+					}
+					.ui-icon {
+						width:15px;
+						height:15px;
+						display:inline-block;
+						background-repeat:no-repeat;
+						font-size:0;
+						overflow:hidden;
+						background-image:url(images/timeline-jan140928124407.png);
+						margin-right:5px;
+						vertical-align:bottom;
+					}
+					.icon-zan,icon-pin {
+						width:20px;
+						height:20px;
+						display:inline-block;
+						background-repeat:no-repeat;
+						font-size:0;
+						overflow:hidden;
+						background-image:url(images/timeline-jan140928124407.png);					
+						vertical-align:bottom;
+					}
+					
+					.icon-zan {
+						background-position: -883px -21px;
+					}
+					.icon-pin {
+						background-position: -897px -42px;
+					}
+					.quotes-after {
+						background-position:-986px -102px;
+					}
+					
+					.quotes-before {
+						background-position:-986px -85px;
+					}
+					
+				</div>
+		</style>
+	</head>
+	<body>
+		<div class="top"></div>
+		<div class="header"></div>
+		<div class="container">
+			<a class="tml_spine"></a>
+			<div class="scrubber">
+				<a href="#" class="scrubber-year_current">2014</a>
+				<a href="#" class="scrubber-month">3月</a>
+				<a href="#" class="scrubber-month">2月</a>
+			</div>
+			<div class="content">
+				<div class="content-year">2014</div>
+				<div class="content-month">三月</div>
+				<div class="content-item">
+					<div class="content-item-icon-arrow"></div>
+					<div class="content-item-icon-dot">
+						<div class="content-item-icon-dot-child">
+						</div>
+					</div>
+					<div class="content-item-head">
+						<div class="content-item-head-title">
+							<div class="content-item-head-title-lunar">
+								三<br>&nbsp;十
+							</div>
+							2014-10-30
+						</div>
+						<div class="content-item-head-intro">
+						 <i class="ui-icon quotes-before"></i>
+						啊哈哈咖喱换个欧阳公好好干够火辣化工鳄鱼狗啊哈嘎哈高哦哎
+						哟狗咬狗要有gay狗咬狗哦啊与gay狗牙 
+						<i class="ui-icon quotes-after"></i>
+						</div>
+					</div>
+					<div class="content-item-media">
+						<img src="images/index.png" style="width:370px;height:250px;"></img>
+					</div>
+					<div class="content-item-footer">
+						<div class="content-item-footer-info">
+							<a href="#" title="赞"><i class="icon-zan"></i>(199)</a>
+							<a href="#" title="评论"><i class="icon-pin"></i>(2199)</a>
+						</div>
+						<div class="content-item-footer-like">
+							2.5万人觉得很赞...
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
